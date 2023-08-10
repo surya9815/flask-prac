@@ -70,8 +70,36 @@ def get_products():
 @app.route('/gproduct/<id>',methods=['GET'])
 def get_product(id):
     product = Product.query.get(id)
-    result = product_schema.dump(product)
-    return jsonify(result.data)
+    # result = product_schema.dump(product)
+    return product_schema.jsonify(product)
+
+
+#Update a product
+@app.route('/gproduct/<id>',methods=['PUT'])
+def update_product(id):
+    product = Product.query.get(id)
+    name = request.json['name']
+    description = request.json['description']
+    price = request.json['price']
+    qty = request.json['qty']
+
+    product.name = name
+    product.description = description
+    product.price = price
+    product.qty = qty
+    
+    db.session.commit()
+    # result = product_schema.dump(product)
+    return product_schema.jsonify(product)
+
+#Delete 1 product
+@app.route('/gproduct/<id>',methods=['DELETE'])
+def delete_product(id):
+    product = Product.query.get(id)
+    db.session.delete(product)
+    db.session.commit()
+    # result = product_schema.dump(product)
+    return product_schema.jsonify(product)
 
 
 #runserver
